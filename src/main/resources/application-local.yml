@@ -1,0 +1,61 @@
+server:
+  port: 10024
+  servlet:
+    context-path: /api/poc
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  jwt:
+    secret: poclaon
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
+  jpa:
+
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: dpdlfgkgustn@gmail.com
+    password: t1183023
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
+
+
+
+  datasource:
+    url: jdbc:mariadb://danusys.asuscomm.com:10024/poc?characterEncoding=UTF-8&ServerTimezone=UTC
+    username: danu
+    password: danu1234
+    driver-class-name: org.mariadb.jdbc.Driver
+    hikari:
+      maximum-pool-size: 1
+      minimum-idle: 2
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+
+
+
+app:
+  filePath: /var/app/poc_dev/upload
+#  filePath: /var/app/poc/upload
+#  filePath: /Users/austin/Documents/laonstory/poc_be_spring/upload
+

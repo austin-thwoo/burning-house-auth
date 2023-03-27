@@ -1,0 +1,66 @@
+server:
+  port: 13221
+  servlet:
+    context-path: /api/poc
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  jwt:
+    secret: pocaustin
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
+  jpa:
+
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: austin@underpin.kr
+    password: t1029311!
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
+
+
+
+
+
+  datasource:
+#    url: jdbc:mariadb://192.168.100.216:3306/poc?characterEncoding=UTF-8&ServerTimezone=UTC
+#    url: jdbc:mariadb://13.125.197.6:3306/poc?characterEncoding=UTF-8&ServerTimezone=UTC
+    url: jdbc:mariadb://localhost:3306/poc?characterEncoding=UTF-8&ServerTimezone=UTC
+#    jdbc:mariadb://13:125:197:6:3306/poc:
+    username: root
+    password: austin
+    driver-class-name: org.mariadb.jdbc.Driver
+    hikari:
+      maximum-pool-size: 1
+      minimum-idle: 2
+      data-source-properties:
+        cachePrepStats: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStats: true
+
+
+
+app:
+  filePath: /var/app/poc/upload
+#  filePath: /var/app/poc/upload
+#  filePath: /Users/austin/Documents/laonstory/poc_be_spring/upload
+
