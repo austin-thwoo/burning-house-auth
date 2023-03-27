@@ -1,13 +1,13 @@
-package com.codingfist.burninghouseskeleton;
+package com.codingfist.burninghouseauth;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BurningHouseSkeletonApplication {
+public class BurningHouseAuthApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(BurningHouseSkeletonApplication.class, args);
+        SpringApplication.run(BurningHouseAuthApplication.class, args);
     }
 
 }

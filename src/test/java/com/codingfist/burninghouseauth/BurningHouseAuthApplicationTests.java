@@ -1,10 +1,10 @@
-package com.codingfist.burninghouseskeleton;
+package com.codingfist.burninghouseauth;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class BurningHouseSkeletonApplicationTests {
+class BurningHouseAuthApplicationTests{
 
     @Test
     void contextLoads() {
