@@ -2,7 +2,7 @@
 echo "======================================="
 echo "        code-fist helper start..        "
 echo "======================================="
-cd ../src/main/java
+cd ../src/main/java/*/*/*
 globalcommon=(`ls -a | grep 'burning-house-global-common'`)
 if [ -z ${globalcommon} ]; then
   echo "there is no global-common directory.."
