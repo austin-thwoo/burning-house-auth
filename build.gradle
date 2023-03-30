@@ -21,20 +21,46 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+
+
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'junit:junit:4.12'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
 
+    //swagger
+    implementation "io.springfox:springfox-boot-starter:3.0.0"
+    implementation "io.springfox:springfox-swagger-ui:3.0.0"
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 
+//JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+    implementation 'javax.servlet:javax.servlet-api:4.0.1'
+//queryDSL
+//    implementation 'com.querydsl:querydsl-jpa'
+//    annotationProcessor("com.querydsl:querydsl-apt:4.3.1:jpa")
+    implementation 'com.querydsl:querydsl-jpa:5.0.0'
+    implementation 'com.querydsl:querydsl-apt:5.0.0'
+
+//    sequrity
+    implementation 'org.springframework.security:spring-security-config:5.6.1'
+    implementation "org.springframework.security.oauth:spring-security-oauth2:2.0.1.RELEASE"
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'com.google.code.gson:gson:2.8.9'
+
 }
+
+
 
 tasks.named('test') {
     useJUnitPlatform()

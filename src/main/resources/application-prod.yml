@@ -10,7 +10,7 @@ server:
 
 spring:
   jwt:
-    secret: spogymlaon
+    secret: coding-fist
   servlet:
     multipart:
       max-file-size: -1
@@ -26,9 +26,9 @@ spring:
 
 
   datasource:
-    url: jdbc:mariadb://localhost:3306/linen_lite?characterEncoding=UTF-8&ServerTimezone=UTC
+    url: jdbc:mariadb://localhost:3306/burning_house_auth?characterEncoding=UTF-8&ServerTimezone=UTC
     username: root
-    password: Laonpp00..L
+    password: austin
     driver-class-name: org.mariadb.jdbc.Driver
     hikari:
       maximum-pool-size: 20

@@ -9,7 +9,7 @@ server:
 
 spring:
   jwt:
-    secret: pocaustin
+    secret: coding-fist
   servlet:
     multipart:
       max-file-size: -1
@@ -62,5 +62,5 @@ spring:
 app:
   filePath: /var/app/poc/upload
 #  filePath: /var/app/poc/upload
-#  filePath: /Users/austin/Documents/laonstory/poc_be_spring/upload
+
 
