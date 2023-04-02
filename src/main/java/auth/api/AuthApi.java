@@ -4,7 +4,7 @@ import auth.application.AuthService;
 import auth.dto.request.UserRegisterCommand;
 import auth.dto.response.TokenResponse;
 import auth.dto.request.LoginCommand;
-import com.codingfist.burninghouseauth.globalCommon.dto.response.ApiResponse;
+import globalCommon.dto.response.ApiResponse;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
