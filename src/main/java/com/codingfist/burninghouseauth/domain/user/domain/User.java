@@ -1,6 +1,6 @@
 package com.codingfist.burninghouseauth.domain.user.domain;
 
-import com.codingfist.burninghouseauth.domain.auth.dto.request.UserRegisterCommand;
+import auth.dto.request.UserRegisterCommand;
 import com.codingfist.burninghouseauth.globalCommon.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;

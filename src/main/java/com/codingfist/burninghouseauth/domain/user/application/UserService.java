@@ -1,7 +1,7 @@
 package com.codingfist.burninghouseauth.domain.user.application;
 
-import com.codingfist.burninghouseauth.domain.auth.exception.UserNotFoundException;
-import com.codingfist.burninghouseauth.domain.auth.exception.UsernameDuplicatedException;
+import auth.exception.UserNotFoundException;
+import auth.exception.UsernameDuplicatedException;
 import com.codingfist.burninghouseauth.domain.user.domain.User;
 import com.codingfist.burninghouseauth.domain.user.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;

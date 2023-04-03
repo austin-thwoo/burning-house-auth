@@ -1,12 +1,9 @@
 package com.codingfist.burninghouseauth.domain.article.api;
 
 import com.codingfist.burninghouseauth.domain.article.application.ArticleService;
-import com.codingfist.burninghouseauth.domain.auth.application.AuthService;
-import com.codingfist.burninghouseauth.domain.auth.dto.request.LoginCommand;
-import com.codingfist.burninghouseauth.domain.auth.dto.response.TokenResponse;
 import com.codingfist.burninghouseauth.domain.user.domain.User;
 import com.codingfist.burninghouseauth.globalCommon.dto.response.ApiResponse;
-import com.codingfist.burninghouseauth.localCommon.dto.response.ObjResponse;
+import localCommon.dto.response.ObjResponse;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
