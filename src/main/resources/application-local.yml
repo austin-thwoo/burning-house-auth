@@ -1,5 +1,5 @@
 server:
-  port: 10024
+  port: 9080
   servlet:
     context-path: /api/poc
     encoding:
@@ -9,7 +9,9 @@ server:
 
 spring:
   jwt:
-    secret: coding-fist
+    secret: coding-fist-burnig-house-austinAndJsonKim-is-the-best-team-shitttttttttt
+#토큰의 암호화 복호화를 위한 secret key로서 이후 HS256 알고리즘을 사용하기 위해, 256비트보다 커야한다.
+#고로 알파벳은 한단어 당 8bit 이므로 32글자 이상이면 된다.
   servlet:
     multipart:
       max-file-size: -1
@@ -39,9 +41,9 @@ spring:
 
 
   datasource:
-    url: jdbc:mariadb://danusys.asuscomm.com:10024/poc?characterEncoding=UTF-8&ServerTimezone=UTC
-    username: danu
-    password: danu1234
+    url: jdbc:mariadb://localhost:3306/burning_house_auth?characterEncoding=UTF-8&ServerTimezone=UTC
+    username: root
+    password: austin
     driver-class-name: org.mariadb.jdbc.Driver
     hikari:
       maximum-pool-size: 1

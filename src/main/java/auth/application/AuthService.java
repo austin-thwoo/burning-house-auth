@@ -68,8 +68,7 @@ public class AuthService {
 
 
 
-    private void checkCode(String userEmail, String authentification) {
-    }
+
 
     private void passwordCheck(String inputPassword, String userPassword) {
 //        boolean match = passwordEncoder.matches(inputPassword, userPassword);

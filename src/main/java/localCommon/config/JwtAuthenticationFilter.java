@@ -29,7 +29,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean implements Filter
 
         if (token != null && jwtTokenProvider.validateToken(token)) {
 
-            Authentication auth = jwtTokenProvider.getAuthentication(token,(HttpServletRequest)request);
+            Authentication auth = jwtTokenProvider.getAuthentication(token);
 
             SecurityContextHolder.getContext().setAuthentication(auth);
 
@@ -38,8 +38,5 @@ public class JwtAuthenticationFilter extends GenericFilterBean implements Filter
         filterChain.doFilter(request, response);
     }
 
-    @Override
-    public void doFilter(jakarta.servlet.ServletRequest request, jakarta.servlet.ServletResponse response, jakarta.servlet.FilterChain chain) throws IOException, jakarta.servlet.ServletException {
 
-    }
 }

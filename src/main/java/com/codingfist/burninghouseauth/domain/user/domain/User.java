@@ -1,16 +1,19 @@
 package com.codingfist.burninghouseauth.domain.user.domain;
 
 import auth.dto.request.UserRegisterCommand;
-import com.codingfist.burninghouseauth.globalCommon.domain.BaseTimeEntity;
-import jakarta.persistence.*;
+
+import globalCommon.domain.BaseTimeEntity;
+
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
+import java.util.stream.Collectors;
 
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -19,7 +22,7 @@ import java.util.List;
 @Builder
 @Getter
 @Table(name = "user")
-public class User extends BaseTimeEntity  implements UserDetails {
+public class User extends BaseTimeEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy  = GenerationType.IDENTITY)
@@ -36,7 +39,7 @@ public class User extends BaseTimeEntity  implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return this.roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
     @Override
