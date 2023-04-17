@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '2.6.3'
+    id 'org.springframework.boot' version '3.0.3'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
 
@@ -22,7 +22,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'junit:junit:4.12'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
@@ -38,6 +38,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 
+
     // JWT
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     implementation group: 'commons-io', name: 'commons-io', version: '2.8.0'
@@ -47,9 +48,13 @@ dependencies {
     implementation 'com.querydsl:querydsl-apt:5.0.0'
 
     // Spring Security OAuth 2.0
-    implementation "org.springframework.security.oauth:spring-security-oauth2:2.0.1.RELEASE"
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+
+    implementation 'org.hibernate.validator:hibernate-validator:7.0.1.Final'
 
     // Gson
+
     implementation 'com.google.code.gson:gson:2.8.9'
 }
 

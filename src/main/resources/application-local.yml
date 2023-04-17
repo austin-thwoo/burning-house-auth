@@ -24,6 +24,10 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
+  security:
+    user:
+      name: austin
+      password: austin
   mail:
     host: smtp.gmail.com
     port: 587
