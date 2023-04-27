@@ -28,9 +28,9 @@
 //
 //        if (token != null && jwtTokenProvider.validateToken(token)) {
 //
-//            Authentication auth = jwtTokenProvider.getAuthentication(token);
+//            Authentication com.codingfist.burninghouseauth.domain.auth = jwtTokenProvider.getAuthentication(token);
 //
-//            SecurityContextHolder.getContext().setAuthentication(auth);
+//            SecurityContextHolder.getContext().setAuthentication(com.codingfist.burninghouseauth.domain.auth);
 //
 //
 //        }

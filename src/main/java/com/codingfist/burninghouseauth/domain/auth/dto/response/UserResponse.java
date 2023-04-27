@@ -1,4 +1,4 @@
-package auth.dto.response;
+package com.codingfist.burninghouseauth.domain.auth.dto.response;
 
 
 import com.codingfist.burninghouseauth.domain.user.domain.User;
@@ -6,23 +6,18 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SimpleUserResponse {
+public class UserResponse {
     private Long id;
     private String userName;
+    private String role;
 
-
-
-
-    public SimpleUserResponse(User user) {
-        this.id = user.getId();
+    public UserResponse(User user){
+        this.id=user.getId();
         this.userName=user.getUsername();
-
-
+        this.role=user.getRoles().get(0);
+//        this.role=new RoleResponse(user.getRoles());
     }
-
 }

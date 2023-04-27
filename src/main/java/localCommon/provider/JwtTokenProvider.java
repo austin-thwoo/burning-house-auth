@@ -1,30 +1,28 @@
 package localCommon.provider;
 
 
-import auth.dto.request.TokenDTO;
-import com.codingfist.burninghouseauth.domain.user.domain.User;
 import io.jsonwebtoken.*;
 
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 
-
 import java.security.Key;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.function.Function;
 
 @RequiredArgsConstructor
 @Component
@@ -37,75 +35,55 @@ public class JwtTokenProvider {
 
     private static final long TOKEN_TIME = 1000L * 60 * 24 * 365;
 
-    private final UserDetailsService userDetailsService;
+    public String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
 
+    public Date extractExpiration(String token) {
+        return extractClaim(token, Claims::getExpiration);
+    }
 
+    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
+    }
 
+    private Claims extractAllClaims(String token) {
+        return Jwts
+                .parserBuilder()
+                .setSigningKey(getSignKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
 
-    // secretKey를 Base64 로 인코딩한다
-    @PostConstruct
-    protected  void init(){
+    private Boolean isTokenExpired(String token) {
+        return extractExpiration(token).before(new Date());
+    }
 
-        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+    public Boolean validateToken(String token, UserDetails userDetails) {
+        final String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
 
-    // 토큰을 만들장
-    public String createToken(Long userId, List<String> roles){
-
-        // Claims 란 jwt 바디 부분
-        // 바디부분에 유저에 대한 정보를 넣는다
-        Claims claims = Jwts.claims().setSubject(userId.toString());
+    public String generateToken(String  userId, List<String> roles){
+        Claims claims = Jwts.claims().setSubject(userId);
         claims.put("roles",roles);
-        Date now =new Date();
-
-
-        return Jwts.builder().setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime()+TOKEN_TIME))
-                .signWith(SignatureAlgorithm.HS256,secretKey)
-                .compact();
+        return createToken(claims,userId);
     }
 
-
-    public Authentication getAuthentication(String token){
-
-        //token = token.substring(6).trim();
-
-        UserDetails user= userDetailsService.loadUserByUsername(getUserId(token));
-
-        return new UsernamePasswordAuthenticationToken(user,"",user.getAuthorities());
+    private String createToken(Map<String, Object> claims, String userName) {
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(userName)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis()+1000*60*30))
+                .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
     }
 
-
-
-    //토큰을 복호화 하고 body에 저장된 유저 id 를 꺼낸다
-    public String getUserId(String token){
-
-        // token = token.substring(6).trim();
-
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
-
-    }
-
-    public String resolveToken(HttpServletRequest req){
-
-
-        return req.getHeader(HttpHeaders.AUTHORIZATION);
-    }
-
-
-    public boolean validateToken(String token){
-
-      /*  log.info(token);
-
-        token = token.substring(6).trim();
-
-        log.info(token);*/
-
-        Jws<Claims> claimsJwt = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-
-        return !claimsJwt.getBody().getExpiration().before(new Date());
-
+    private Key getSignKey() {
+        byte[] keyBytes= Decoders.BASE64.decode(secretKey);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 }

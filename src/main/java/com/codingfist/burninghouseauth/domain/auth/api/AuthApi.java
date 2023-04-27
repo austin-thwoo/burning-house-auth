@@ -1,9 +1,9 @@
-package auth.api;
+package com.codingfist.burninghouseauth.domain.auth.api;
 
-import auth.application.AuthService;
-import auth.dto.request.UserRegisterCommand;
-import auth.dto.response.TokenResponse;
-import auth.dto.request.LoginCommand;
+import com.codingfist.burninghouseauth.domain.auth.application.AuthService;
+import com.codingfist.burninghouseauth.domain.auth.dto.request.UserRegisterCommand;
+import com.codingfist.burninghouseauth.domain.auth.dto.response.TokenResponse;
+import com.codingfist.burninghouseauth.domain.auth.dto.request.LoginCommand;
 import globalCommon.dto.response.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -21,10 +21,8 @@ public class AuthApi {
 
 
     private final AuthService authService;
-
-
     @Operation(summary = "회원가입")
-    @PostMapping
+    @PostMapping("/po")
     public ApiResponse<TokenResponse> save(@RequestBody UserRegisterCommand registerCommand) {
         return new ApiResponse<>(authService.register(registerCommand));
     }

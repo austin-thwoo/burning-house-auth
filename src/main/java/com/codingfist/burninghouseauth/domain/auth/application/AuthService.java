@@ -1,27 +1,38 @@
-package auth.application;
+package com.codingfist.burninghouseauth.domain.auth.application;
 
-import auth.dto.response.TokenResponse;
-import auth.dto.request.LoginCommand;
-import auth.dto.request.TokenDTO;
-import auth.dto.request.UserRegisterCommand;
+import com.codingfist.burninghouseauth.domain.auth.dto.response.TokenResponse;
+import com.codingfist.burninghouseauth.domain.auth.dto.request.LoginCommand;
+import com.codingfist.burninghouseauth.domain.auth.dto.request.TokenDTO;
+import com.codingfist.burninghouseauth.domain.auth.dto.request.UserRegisterCommand;
 import com.codingfist.burninghouseauth.domain.user.application.UserService;
 import com.codingfist.burninghouseauth.domain.user.domain.User;
 
 import localCommon.provider.JwtTokenProvider;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
+@Transactional
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class AuthService {
 
 
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
     private final JwtTokenProvider jwtTokenProvider;
+
+    public AuthService(UserService userService, JwtTokenProvider jwtTokenProvider, JwtTokenProvider jwtTokenProvider1) {
+        this.userService = userService;
+
+        this.jwtTokenProvider = jwtTokenProvider1;
+    }
 
 
     public TokenResponse register(UserRegisterCommand registerCommand) {
@@ -31,7 +42,7 @@ public class AuthService {
     }
 
     private String getToken(User user) {
-        return jwtTokenProvider.createToken(user.getId(), user.getRoles());
+        return jwtTokenProvider.generateToken(user.getId().toString(), user.getRoles());
     }
 
     private boolean existUserByUsername(String userName) {
@@ -42,6 +53,8 @@ public class AuthService {
     public User save(UserRegisterCommand registerCommand) {
         return place(registerCommand);
     }
+
+
     public User place(UserRegisterCommand registerCommand) {
         existUserByUsername(registerCommand.getUsername());
         registerCommand.setEncodedPassword(passwordEncoder.encode(registerCommand.getPassword()));
@@ -58,8 +71,7 @@ public class AuthService {
         passwordCheck(loginCommand.getPassword(), user.getPassword());
 
 
-
-        String token = jwtTokenProvider.createToken(user.getId(), user.getRoles());
+        String token = jwtTokenProvider.generateToken(user.getId().toString(), user.getRoles());
 
 
         TokenDTO dto = new TokenDTO(token, user);
@@ -67,15 +79,11 @@ public class AuthService {
     }
 
 
-
-
-
     private void passwordCheck(String inputPassword, String userPassword) {
 //        boolean match = passwordEncoder.matches(inputPassword, userPassword);
 //        if (!match) {
 //            throw new InvalidPasswordException(inputPassword);
-        }
-
+    }
 
 
     public boolean usernameOverLap(String userName) {

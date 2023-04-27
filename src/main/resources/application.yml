@@ -1,3 +1,15 @@
 spring:
   profiles:
     active: local
+  mvc:
+    servlet:
+      load-on-startup: 1
+  output:
+    ansi:
+      enabled=always:
+
+  logging:
+    level:
+      root: ERROR
+      org:
+       springframework: DEBUG

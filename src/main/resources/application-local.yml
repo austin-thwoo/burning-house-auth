@@ -1,7 +1,7 @@
 server:
   port: 9080
   servlet:
-    context-path: /api/poc
+    context-path: /api/burn
     encoding:
       charset: UTF-8
       enabled: true
