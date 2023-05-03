@@ -5,9 +5,7 @@ import auth.dto.request.UserRegisterCommand;
 import auth.dto.response.TokenResponse;
 import auth.dto.request.LoginCommand;
 import globalCommon.dto.response.ApiResponse;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @EnableAutoConfiguration
 @RequiredArgsConstructor
-@Tag(name = "미인증 사용자")
+@Api(value = "미인증 사용자")
 @RequestMapping("/auth")
 public class AuthApi {
 
@@ -23,23 +21,23 @@ public class AuthApi {
     private final AuthService authService;
 
 
-    @Operation(summary = "회원가입")
+    @ApiOperation(value = "회원가입")
     @PostMapping
     public ApiResponse<TokenResponse> save(@RequestBody UserRegisterCommand registerCommand) {
         return new ApiResponse<>(authService.register(registerCommand));
     }
 
-    @Operation(summary = "로그인", description = "로그인->토큰발행")
-    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "로그인을 성공했습니다."),
-//            @ApiResponse(responseCode = "404", description = "고객 아이디로 정보를 조회할 수 없습니다.\n삭제되거나 없는 고객입니다.")
+    @ApiOperation(value = "로그인", notes = "로그인->토큰발행")
+        @ApiResponses(value = {
+            @io.swagger.annotations.ApiResponse(code = 200, message = "로그인을 성공했습니다."),
+            @io.swagger.annotations.ApiResponse(code = 404, message = "고객 아이디로 정보를 조회할 수 없습니다.\n삭제되거나 없는 고객입니다.")
     })
     @PostMapping("/login")
     public ApiResponse<TokenResponse> login(@RequestBody LoginCommand loginCommand) {
         return new ApiResponse<>(authService.login(loginCommand));
     }
 
-    @Operation(summary = "아이디 중복확인 버튼")
+    @ApiOperation(value = "아이디 중복확인 버튼")
     @GetMapping("/overlap")
     public ApiResponse<Boolean> usernameOverLap(@RequestParam String userName) {
         return new ApiResponse<>(authService.usernameOverLap(userName));

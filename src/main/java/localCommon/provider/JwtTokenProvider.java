@@ -1,28 +1,28 @@
 package localCommon.provider;
 
 
-import auth.dto.request.TokenDTO;
-import com.codingfist.burninghouseauth.domain.user.domain.User;
-import io.jsonwebtoken.*;
-
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import java.security.Key;
-import java.util.*;
+import java.util.Base64;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -33,78 +33,67 @@ public class JwtTokenProvider {
     @Value("spring.jwt.secret")
     private String secretKey;
 
-
-    private static final long TOKEN_TIME = 1000L * 60 * 24 * 365;
+    private static final long TOKEN_EXPIRED_TIME = 1000L * 60 * 60 * 24 * 365;
 
     private final UserDetailsService userDetailsService;
 
-
-
-
-    // secretKey를 Base64 로 인코딩한다
     @PostConstruct
-    protected  void init(){
-
+    protected void init() {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-
-    // 토큰을 만들장
-    public String createToken(Long userId, List<String> roles){
-
-        // Claims 란 jwt 바디 부분
-        // 바디부분에 유저에 대한 정보를 넣는다
-        Claims claims = Jwts.claims().setSubject(userId.toString());
-        claims.put("roles",roles);
-        Date now =new Date();
-
-
-        return Jwts.builder().setClaims(claims)
+    // Jwt 토큰 생성
+    public String createToken(Long userPk, List<String> roles) {
+        Claims claims = Jwts.claims().setSubject(String.valueOf(userPk));
+        claims.put("roles", roles);
+        Date now = new Date();
+        return Jwts.builder()
+                .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime()+TOKEN_TIME))
-                .signWith(SignatureAlgorithm.HS256,secretKey)
+                .setExpiration(new Date(now.getTime() + TOKEN_EXPIRED_TIME))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 
+    // Jwt 토큰으로 인증 정보를 조회
+    public Authentication getAuthentication(String token,HttpServletRequest req) {
 
-    public Authentication getAuthentication(String token){
+        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));
 
-        //token = token.substring(6).trim();
+        List<String> role = userDetails.getAuthorities().stream().map(String::valueOf).collect(Collectors.toList());
 
-        UserDetails user= userDetailsService.loadUserByUsername(getUserId(token));
+        if(req.getMethod().equals("POST")){
 
-        return new UsernamePasswordAuthenticationToken(user,"",user.getAuthorities());
+            if(role.stream().anyMatch(e-> e.equals("ROLE_BANNED"))){
+
+                log.info(role.get(0));
+
+                throw new EntityNotFoundException(userDetails.getUsername());
+
+            }
+
+
+        }
+
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-
-
-    //토큰을 복호화 하고 body에 저장된 유저 id 를 꺼낸다
-    public String getUserId(String token){
-
-        // token = token.substring(6).trim();
-
+    // Jwt 토큰에서 회원 구별 정보 추출
+    public String getUserPk(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
-
     }
 
-    public String resolveToken(HttpServletRequest req){
-
-
-        return req.getHeader(HttpHeaders.AUTHORIZATION);
+    public String resolveToken(HttpServletRequest req) {
+        return req.getHeader("AUTH-TOKEN");
     }
 
-
-    public boolean validateToken(String token){
-
-      /*  log.info(token);
-
-        token = token.substring(6).trim();
-
-        log.info(token);*/
-
-        Jws<Claims> claimsJwt = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-
-        return !claimsJwt.getBody().getExpiration().before(new Date());
-
+    // Jwt 토큰의 유효성 + 만료일자 확인
+    public boolean validateToken(String jwtToken) {
+        try {
+            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
+            return !claims.getBody().getExpiration().before(new Date());
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

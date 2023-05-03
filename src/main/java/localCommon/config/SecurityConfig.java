@@ -1,8 +1,7 @@
 package localCommon.config;
 
-
-import globalCommon.dto.response.ErrorResponse;
-import globalCommon.error.model.ErrorCode;
+import com.codingfist.burninghouseauth.globalCommon.dto.response.ErrorResponse;
+import com.codingfist.burninghouseauth.globalCommon.error.model.ErrorCode;
 import localCommon.provider.JwtTokenProvider;
 
 import com.google.gson.Gson;
@@ -12,24 +11,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.oauth2.provider.expression.OAuth2MethodSecurityExpressionHandler;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.DefaultSecurityFilterChain;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsUtils;
 
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.Filter;
+//import javax.servlet.http.HttpServletRequest;
+//
+//import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -41,44 +37,43 @@ import java.io.PrintWriter;
 @EnableWebSecurity
 @Configuration
 @Slf4j
-public class SecurityConfig {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtTokenProvider jwtTokenProvider;
-
+    private final ExceptionFilter exceptionFilter;
     private final UserDetailsService userDetailsService;
 
 
-
     @Bean
-    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.httpBasic()
-                .disable()
-                .csrf()
-                .disable()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.httpBasic().disable()
+                .csrf().disable()
+
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+
                 .authorizeRequests()
-                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .antMatchers("/auth/**", "/shop/*", "/resource/*").permitAll()
-                .antMatchers("/user/**", "/**").hasRole("USER")
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()//이거없으면 큰일남
+                .antMatchers("/auth/**", "/resource/*").permitAll()
+                .antMatchers("/user/**","/shop/**").hasAnyRole("USER")
+                .antMatchers("/user/**","//**").hasAnyRole("USER")
                 .antMatchers("/manage/**").hasRole("ADMIN")
                 .and()
                 .exceptionHandling()
                 .accessDeniedHandler(accessDeniedHandler())
                 .authenticationEntryPoint(authenticationEntryPoint())
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), JwtAuthenticationFilter.class);
-        return http.build();
-    }
 
-    @EnableGlobalMethodSecurity( securedEnabled = true)
-    public static class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), (Class<? extends Filter>) UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore((Filter) exceptionFilter,JwtAuthenticationFilter.class);
 
-        @Override
-        protected MethodSecurityExpressionHandler createExpressionHandler() {
-            return new OAuth2MethodSecurityExpressionHandler();
-        }
+
     }
 
     private AccessDeniedHandler accessDeniedHandler() {
@@ -92,6 +87,9 @@ public class SecurityConfig {
         };
     }
 
+
+
+
     private AuthenticationEntryPoint authenticationEntryPoint() {
         log.info("authenticationEntryPoint");
 
@@ -101,7 +99,10 @@ public class SecurityConfig {
         };
     }
 
-    private void accessDeniedException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
+
+
+
+    private void accessDeniedException(jakarta.servlet.http.HttpServletRequest httpServletRequest, jakarta.servlet.http.HttpServletResponse httpServletResponse) throws IOException {
 
 
         log.info("accessDeniedException");
@@ -117,7 +118,7 @@ public class SecurityConfig {
         out.flush();
     }
 
-    private void invalidTokenException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
+    private void invalidTokenException(jakarta.servlet.http.HttpServletRequest httpServletRequest, jakarta.servlet.http.HttpServletResponse httpServletResponse) throws IOException {
 
         log.info("invalidTokenException");
 

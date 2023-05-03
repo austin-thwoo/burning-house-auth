@@ -1,7 +1,7 @@
 package auth.exception;
 
 
-import globalCommon.error.exception.EntityNotFoundException;
+import com.codingfist.burninghouseauth.globalCommon.error.exception.EntityNotFoundException;
 
 public class UserNotFoundException extends EntityNotFoundException {
 

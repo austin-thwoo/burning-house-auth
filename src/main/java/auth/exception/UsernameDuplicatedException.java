@@ -1,8 +1,8 @@
 package auth.exception;
 
 
-import globalCommon.error.exception.BusinessException;
-import globalCommon.error.model.ErrorCode;
+import com.codingfist.burninghouseauth.globalCommon.error.exception.BusinessException;
+import com.codingfist.burninghouseauth.globalCommon.error.model.ErrorCode;
 
 public class UsernameDuplicatedException extends BusinessException {
     public UsernameDuplicatedException(String value) {
