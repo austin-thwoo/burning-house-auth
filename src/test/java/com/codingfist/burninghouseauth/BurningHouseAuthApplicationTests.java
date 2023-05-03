@@ -9,4 +9,5 @@ class BurningHouseAuthApplicationTests{
     @Test
     void contextLoads() {
     }
+
 }
