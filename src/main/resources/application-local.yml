@@ -1,7 +1,7 @@
 server:
   port: 10024
   servlet:
-    context-path: /api/poc
+    context-path: /api/burn
     encoding:
       charset: UTF-8
       enabled: true
@@ -22,6 +22,10 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
+  security:
+    user:
+      name: austin
+      password: austin
   mail:
     host: smtp.gmail.com
     port: 587

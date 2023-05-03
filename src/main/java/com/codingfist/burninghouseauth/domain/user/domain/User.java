@@ -1,16 +1,15 @@
 package com.codingfist.burninghouseauth.domain.user.domain;
 
-import auth.dto.request.UserRegisterCommand;
-import com.codingfist.burninghouseauth.globalCommon.domain.BaseTimeEntity;
+import com.codingfist.burninghouseauth.domain.auth.dto.request.UserRegisterCommand;
+
+import globalCommon.domain.BaseTimeEntity;
+
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-
 
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -19,7 +18,7 @@ import java.util.List;
 @Builder
 @Getter
 @Table(name = "user")
-public class User extends BaseTimeEntity  implements UserDetails {
+public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy  = GenerationType.IDENTITY)
@@ -34,30 +33,30 @@ public class User extends BaseTimeEntity  implements UserDetails {
     @Builder.Default
     private final List<String> roles = new ArrayList<>();
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
-    }
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        return this.roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+//    }
+//
+//    @Override
+//    public boolean isAccountNonExpired() {
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean isAccountNonLocked() {
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean isCredentialsNonExpired() {
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean isEnabled() {
+//        return false;
+//    }
 
     public static User create(UserRegisterCommand registerCommand) {
         return User.builder()

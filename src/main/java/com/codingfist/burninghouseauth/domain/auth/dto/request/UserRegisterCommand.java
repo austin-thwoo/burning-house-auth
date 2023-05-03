@@ -1,10 +1,8 @@
-package auth.dto.request;
+package com.codingfist.burninghouseauth.domain.auth.dto.request;
 
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Getter
 @NoArgsConstructor
