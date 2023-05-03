@@ -1,83 +1,108 @@
-//package localCommon.config;
-//
-//import java.util.Arrays;
-//
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.security.core.annotation.AuthenticationPrincipal;
-//
-//import io.swagger.v3.oas.models.Components;
-//import io.swagger.v3.oas.models.OpenAPI;
-//import io.swagger.v3.oas.models.info.Info;
-//import io.swagger.v3.oas.models.security.SecurityRequirement;
-//import io.swagger.v3.oas.models.security.SecurityScheme;
-//import io.swagger.v3.oas.models.servers.Server;
-//import springfox.documentation.builders.PathSelectors;
-//import springfox.documentation.builders.RequestHandlerSelectors;
-//import springfox.documentation.oas.annotations.EnableOpenApi;
-//import springfox.documentation.service.ApiKey;
-//import springfox.documentation.service.AuthorizationScope;
-//import springfox.documentation.service.SecurityReference;
-//import springfox.documentation.spi.DocumentationType;
-//import springfox.documentation.spring.web.plugins.Docket;
-//import springfox.documentation.spring.web.plugins.SpringDocSecurityConfiguration;
-//import springfox.documentation.swagger.web.SecurityConfiguration;
-//import springfox.documentation.swagger.web.SecurityConfigurationBuilder;
-//
-//@Configuration
-//@EnableOpenApi
-//public class SwaggerConfig {
-//
-//    @Bean
-//    public OpenAPI customOpenAPI() {
-//        return new OpenAPI()
-//                .components(new Components().addSecuritySchemes("bearer-key",
-//                        new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")))
-//                .info(new Info().title("PoC").version("Austin")
-//                        .description("PoC \n contextPath = 192.168.1.48:10024/api/poc \n \n " +
-//                                "table \n \n" +
-//                                "company - 거래처,제조사,공장 \n" +
-//                                "document - 문서 \n" +
-//                                "examination - 시험신청 \n" +
-//                                "examinationHistory - 시험신청 기록 \n" +
-//                                "pic - 담당자 \n" +
-//                                "proReferenceFile - 참고자료 \n" +
-//                                "requirement - 요구사항 \n" +
-//                                "test - 시험정 \n" +
-//                                "stdxxxx - 규격정보 \n" +
-//                                "user - 회원"))
-//                .addServersItem(new Server().url("http://localhost:8080/"));
-//    }
-//
-//    @Bean
-//    public Docket commonApi() {
-//        return new Docket(DocumentationType.OAS_30)
-//                .ignoredParameterTypes(AuthenticationPrincipal.class)
-//                .select()
-//                .apis(RequestHandlerSelectors.any())
-//                .paths(PathSelectors.ant("/api/poc/**"))
-//                .build()
-//                .securitySchemes(Arrays.asList(apiKey()))
-//                .securityContexts(Arrays.asList(securityContext()))
-//                .useDefaultResponseMessages(false)
-//                .apiInfo(apiInfo());
-//    }
-//
-//    @Bean
-//    public Docket managerApi() {
-//        return new Docket(DocumentationType.OAS_30)
-//                .ignoredParameterTypes(AuthenticationPrincipal.class)
-//                .select()
-//                .apis(RequestHandlerSelectors.any())
-//                .paths(PathSelectors.ant("/api/brc/manage/**"))
-//                .build()
-//                .securitySchemes(Arrays.asList(apiKey()))
-//                .securityContexts(Arrays.asList(securityContext()))
-//                .useDefaultResponseMessages(false)
-//                .apiInfo(apiInfo());
-//    }
-//
-//    @Bean
-//    public SecurityConfiguration securityConfiguration() {
-//        return SecurityConfigurationBuilder.builder()
-//                .clientId("
+package localCommon.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.ApiKey;
+import springfox.documentation.service.AuthorizationScope;
+import springfox.documentation.service.SecurityReference;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.contexts.SecurityContext;
+import springfox.documentation.spring.web.plugins.Docket;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
+
+
+@Configuration
+public class SwaggerConfig {
+
+
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder()
+                .title("PoC")
+                .version("Austin")
+                .description("PoC \n contextPath = 192.168.1.48:10024/api/poc \n \n " +
+                        "table \n \n" +
+                        "company - 거래처,제조사,공장 \n" +
+                        "document - 문서 \n" +
+                        "examination - 시험신청 \n" +
+                        "examinationHistory - 시험신청 기록 \n" +
+                        "pic - 담당자 \n" +
+                        "proReferenceFile - 참고자료 \n" +
+                        "requirement - 요구사항 \n" +
+                        "test - 시험정 \n" +
+                        "stdxxxx - 규격정보 \n" +
+                        "user - 회원")
+                .build();
+    }
+
+    private Set<String> getConsumeContentTypes() {
+        Set<String> consumes = new HashSet<>();
+        consumes.add("application/json;charset=UTF-8");
+        consumes.add("application/x-www-form-urlencoded");
+        return consumes;
+    }
+
+    private Set<String> getProduceContentType() {
+        Set<String> produces = new HashSet<>();
+        produces.add("application/json;charset=UTF-8");
+        produces.add("multipart/form-data");
+        return produces;
+    }
+
+    private ApiKey apiKey() {
+        return new ApiKey("JWT", "Authorization", "header");
+    }
+
+    private SecurityContext securityContext() {
+        return SecurityContext.builder().securityReferences(bearerAuth()).build();
+    }
+
+    private List<SecurityReference> bearerAuth() {
+        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
+        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
+        authorizationScopes[0] = authorizationScope;
+        return List.of(new SecurityReference("JWT", authorizationScopes));
+    }
+
+    @Bean
+    public Docket commonApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .ignoredParameterTypes(AuthenticationPrincipal.class)
+                .consumes(getConsumeContentTypes())
+                .produces(getProduceContentType())
+                .groupName("APP Server")
+                .securityContexts(List.of(securityContext()))
+                .securitySchemes(List.of(apiKey()))
+                .apiInfo(apiInfo())
+                .select()
+                .apis(RequestHandlerSelectors.any())
+                .apis(Predicate.not(RequestHandlerSelectors.basePackage("com.burning-house.domain.manager")))
+                .paths(PathSelectors.ant("/api/poc/**"))
+                .build();
+    }
+
+    @Bean
+    public Docket managerApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .ignoredParameterTypes(AuthenticationPrincipal.class)
+                .consumes(getConsumeContentTypes())
+                .produces(getProduceContentType())
+                .groupName("Manager")
+                .securityContexts(List.of(securityContext()))
+                .securitySchemes(List.of(apiKey()))
+                .select()
+                .apis(RequestHandlerSelectors.any())
+                .paths(PathSelectors.ant("/api/brc/manage/**"))
+                .build();
+    }
+
+
+}
