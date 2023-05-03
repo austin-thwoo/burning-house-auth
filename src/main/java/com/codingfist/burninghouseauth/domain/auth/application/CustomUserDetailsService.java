@@ -1,10 +1,9 @@
-package auth.application;
+package com.codingfist.burninghouseauth.domain.auth.application;
 
 import com.codingfist.burninghouseauth.domain.user.domain.User;
 import com.codingfist.burninghouseauth.domain.user.repository.UserJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;

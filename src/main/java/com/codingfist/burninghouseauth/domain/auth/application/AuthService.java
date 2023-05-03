@@ -1,15 +1,18 @@
-package auth.application;
+package com.codingfist.burninghouseauth.domain.auth.application;
 
-import auth.dto.response.TokenResponse;
-import auth.dto.request.LoginCommand;
-import auth.dto.request.TokenDTO;
-import auth.dto.request.UserRegisterCommand;
+import com.codingfist.burninghouseauth.domain.auth.dto.response.TokenResponse;
+import com.codingfist.burninghouseauth.domain.auth.dto.request.LoginCommand;
+import com.codingfist.burninghouseauth.domain.auth.dto.request.TokenDTO;
+import com.codingfist.burninghouseauth.domain.auth.dto.request.UserRegisterCommand;
 import com.codingfist.burninghouseauth.domain.user.application.UserService;
 import com.codingfist.burninghouseauth.domain.user.domain.User;
 
 import localCommon.provider.JwtTokenProvider;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +20,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;

@@ -1,7 +1,7 @@
-package auth.dto.response;
+package com.codingfist.burninghouseauth.domain.auth.dto.response;
 
 
-import auth.dto.request.TokenDTO;
+import com.codingfist.burninghouseauth.domain.auth.dto.request.TokenDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

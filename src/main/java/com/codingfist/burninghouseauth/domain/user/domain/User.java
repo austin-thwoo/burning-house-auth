@@ -1,6 +1,6 @@
 package com.codingfist.burninghouseauth.domain.user.domain;
 
-import auth.dto.request.UserRegisterCommand;
+import com.codingfist.burninghouseauth.domain.auth.dto.request.UserRegisterCommand;
 
 import globalCommon.domain.BaseTimeEntity;
 

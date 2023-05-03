@@ -1,4 +1,4 @@
-package auth.exception;
+package com.codingfist.burninghouseauth.domain.auth.exception;
 
 
 import globalCommon.error.exception.EntityNotFoundException;
