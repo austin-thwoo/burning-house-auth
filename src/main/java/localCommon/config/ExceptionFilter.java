@@ -1,7 +1,5 @@
 package localCommon.config;
 
-import com.codingfist.burninghouseauth.globalCommon.dto.response.ErrorResponse;
-import com.codingfist.burninghouseauth.globalCommon.error.model.ErrorCode;
 import com.google.gson.Gson;
 
 
